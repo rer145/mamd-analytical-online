@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v1
 
       - name: Deploy
-        uses: reggionick/s3-deploy@v3
+        uses: reggionick/s3-deploy@v4
         with:
           folder: mamd-web
           bucket: ${{ vars.PRODUCTION_S3_BUCKET }}
@@ -22,4 +22,4 @@ jobs:
           delete-removed: true
           no-cache: true
           private: true
-          filesToInclude: ".*/*,*/*,**"
+          files-to-include: '{.*/**,**}'
