@@ -21,6 +21,8 @@ docker push rer145/mamd-api-base
 
 The mamd-api project builds a Docker container with the analytical data and script to perform the analysis. It relies on the mamd-api-base to setup rstudio/plumber and constantly runs, waiting for inputs from the mamd-web project.
 
+This container is currently running on an AWS Lightsail instance (Micro x1 - 1gb, 0.25 vCPUs).
+
 **Building/Deploying**
 ```
 docker build -t mamd-api .
