@@ -1,0 +1,23 @@
+Web
+X- Setup git repo for website
+- add gha to push to aws s3 and point domain to it
+- copy process from cookie web for cloudfront, etc.
+- change open/save functions to do file upload/downloads?
+- check with Joe about ancestry groups with new data file
+
+Docker/API
+- add gha to push docker files to aws repos
+- setup ecs/apprunner service to host api?
+- point api.mamdanalytical.com to ecs/ar service
+- format output from api.R to proper json
+- add health check endpoint?
+- add openapi documentation for api
+- add endpoint for r version and package versions?
+
+
+Cleanup
+- cleanup extra web code for electron/tracking
+- add google analytics for tracking events/time?
+X- document docker build/tag/push process
+- write documentation on hub.docker.com for containers
+
