@@ -14,19 +14,7 @@ function show_app() {
 }
 
 $(document).ready(function() {
-	window.appdb = app_preload();
-	window.is_dirty = false;
-	window.current_file = "";
-	window.current_results = "";
-
-	localStorage.setItem("version", "1.0.0");
-	localStorage.setItem("uuid", "");
-	localStorage.setItem("settings.analytics", true);
-	localStorage.setItem("settings.dev_mode", true);
-
-	$("#app-version").text(localStorage.getItem("version"));
-
-	app_init();
+	app_preload();
 });
 
 function wire_events() {
@@ -165,7 +153,19 @@ function wire_events() {
 function app_preload() {
 	$.get("assets/db/db.min.json").then((data) => { 
 		localStorage.setItem("db", JSON.stringify(data));
-		return data;
+		
+		window.is_dirty = false;
+		window.current_file = "";
+		window.current_results = "";
+
+		localStorage.setItem("version", "1.0.0");
+		localStorage.setItem("uuid", "");
+		localStorage.setItem("settings.analytics", true);
+		localStorage.setItem("settings.dev_mode", true);
+
+		$("#app-version").text(localStorage.getItem("version"));
+
+		app_init();
 	});
 }
 
@@ -185,7 +185,8 @@ function app_setupselections() {
 
 	var traits = JSON.parse(localStorage.getItem("db")).traits;
 	for (var i = 0; i < traits.length; i++) {
-		output[traits[i].abbreviation] = "NA";
+		// output[traits[i].abbreviation] = "NA";
+		output[traits[i].abbreviation] = -1;
 	}
 
 	// var groups = window.appdb["groups"];
@@ -202,8 +203,9 @@ function app_init() {
 	show_traits();
 	//check_offline_status();
 
-	enable_button("save-button");
-	enable_button("open-button");
+	disable_button("export-results-pdf");
+	disable_button("save-button");
+	disable_button("open-button");
 	enable_button("new-button");
 
 	probs_chart = new Chart(document.getElementById("results-probabilities"), {
@@ -245,107 +247,111 @@ function new_case() {
 }
 
 function open_case() {
-	dialog.showOpenDialog({
-		properties: ['openFile'],
-		title: "Open MaMD Analytical File",
-		buttonLabel : "Open MaMD File",
-		filters :[
-			{name: 'MaMD Analytical', extensions: ['mamd']}
-		]
-	}, function(files) {
-		if (files != undefined) {
-			if (files.length == 1) {
-				new_case();
-				var filePath = files[0];
+	return;
 
-				fs.readFile(filePath, 'utf8', (err, data) => {
-					if (err) {
-						console.error(err);
-						trackException(err, false);
-					}
+	// dialog.showOpenDialog({
+	// 	properties: ['openFile'],
+	// 	title: "Open MaMD Analytical File",
+	// 	buttonLabel : "Open MaMD File",
+	// 	filters :[
+	// 		{name: 'MaMD Analytical', extensions: ['mamd']}
+	// 	]
+	// }, function(files) {
+	// 	if (files != undefined) {
+	// 		if (files.length == 1) {
+	// 			new_case();
+	// 			var filePath = files[0];
 
-					var json = JSON.parse(data);
+	// 			fs.readFile(filePath, 'utf8', (err, data) => {
+	// 				if (err) {
+	// 					console.error(err);
+	// 					trackException(err, false);
+	// 				}
 
-					// TODO: populate case info
-					$("#case_number_input").val(json['properties']['case_number']);
-					$("#observation_date_input").val(json['properties']['observation_date']);
-					$("#analyst_input").val(json['properties']['analyst']);
+	// 				var json = JSON.parse(data);
 
-					$.each(json['traits'], function(key, data) {
-						if (data != "NA") {
-							var row = $("#trait-" + key);
-							//console.log("searching in " + key);
-							$.each(row.find(".trait-image-button"), function (i, v) {
-								if ($(this).attr("data-trait") === key &&
-									$(this).attr("data-value") === data) {
-										toggleTraitUISelection($(this), key, data);
-									}
-							});
-						}
-					});
+	// 				// TODO: populate case info
+	// 				$("#case_number_input").val(json['properties']['case_number']);
+	// 				$("#observation_date_input").val(json['properties']['observation_date']);
+	// 				$("#analyst_input").val(json['properties']['analyst']);
 
-					// TODO: populate results if applicable
-					if (json["results"] != undefined) {
-						show_results(json, json["results"]);
-						// $("#analysis-results-1").html(json["results"]["ancestry"]);
-						// $("#analysis-results-2").html(json["results"]["probabilities"]);
-						// $("#analysis-results-3").html(json["results"]["matrix"]);
+	// 				$.each(json['traits'], function(key, data) {
+	// 					if (data != "NA") {
+	// 						var row = $("#trait-" + key);
+	// 						//console.log("searching in " + key);
+	// 						$.each(row.find(".trait-image-button"), function (i, v) {
+	// 							if ($(this).attr("data-trait") === key &&
+	// 								$(this).attr("data-value") === data) {
+	// 									toggleTraitUISelection($(this), key, data);
+	// 								}
+	// 						});
+	// 					}
+	// 				});
 
-						// $("#analysis-pending").hide();
-						// $("#analysis-loading").hide();
-						// $("#analysis-error").hide();
-						// $("#analysis-results").show();
-					}
+	// 				// TODO: populate results if applicable
+	// 				if (json["results"] != undefined) {
+	// 					show_results(json, json["results"]);
+	// 					// $("#analysis-results-1").html(json["results"]["ancestry"]);
+	// 					// $("#analysis-results-2").html(json["results"]["probabilities"]);
+	// 					// $("#analysis-results-3").html(json["results"]["matrix"]);
 
-					// set properties for file checking
-					window.current_file = filePath;
+	// 					// $("#analysis-pending").hide();
+	// 					// $("#analysis-loading").hide();
+	// 					// $("#analysis-error").hide();
+	// 					// $("#analysis-results").show();
+	// 				}
 
-					validate_selections();
-				});
-			}
-		}
-	})
+	// 				// set properties for file checking
+	// 				window.current_file = filePath;
+
+	// 				validate_selections();
+	// 			});
+	// 		}
+	// 	}
+	// })
 }
 
 function save_case() {
-	// TODO: encode results strings to form valid JSON
-	var output = '{"traits":' + JSON.stringify(window.selections) + ',';
-	output += '"properties":{"case_number":"' + $("#case_number_input").val() + '",';
-	output += '"analyst":"' + $("#analyst_input").val() + '",';
-	output += '"observation_date":"' + $("#observation_date_input").val() + '"}';
+	return; 
 
-	if (JSON.stringify(window.current_results).length > 0) {
-		output += ', "results": ' + JSON.stringify(window.current_results);
-	}
+	// // TODO: encode results strings to form valid JSON
+	// var output = '{"traits":' + JSON.stringify(window.selections) + ',';
+	// output += '"properties":{"case_number":"' + $("#case_number_input").val() + '",';
+	// output += '"analyst":"' + $("#analyst_input").val() + '",';
+	// output += '"observation_date":"' + $("#observation_date_input").val() + '"}';
 
-	// output += '"results":{"ancenstry":"' + JSON.stringify($("#analysis-results-1").html()) + '",';
-	// output += '"probabilities":"' + JSON.stringify($("#analysis-results-2").html()) + '",';
-	// output += '"matrix":"' + JSON.stringify($("#analysis-results-3").html()) + '"}';
-	output += '}';
+	// if (JSON.stringify(window.current_results).length > 0) {
+	// 	output += ', "results": ' + JSON.stringify(window.current_results);
+	// }
 
-	console.log(output);
+	// // output += '"results":{"ancenstry":"' + JSON.stringify($("#analysis-results-1").html()) + '",';
+	// // output += '"probabilities":"' + JSON.stringify($("#analysis-results-2").html()) + '",';
+	// // output += '"matrix":"' + JSON.stringify($("#analysis-results-3").html()) + '"}';
+	// output += '}';
 
-	if (window.current_file == "") {
-		var options = {
-			title: "Save MaMD Analytical File",
-			buttonLabel : "Save MaMD File",
-			filters :[
-				{name: 'MaMD Analytical', extensions: ['mamd']}
-			]
-		};
-		window.current_file = dialog.showSaveDialog(null, options);
-	}
+	// console.log(output);
 
-	fs.writeFile(window.current_file, output, function(err) {
-		if (err) {
-			trackException(err, false);
-			console.error(err);
-		}
-		console.log("File saved");
-	});
+	// if (window.current_file == "") {
+	// 	var options = {
+	// 		title: "Save MaMD Analytical File",
+	// 		buttonLabel : "Save MaMD File",
+	// 		filters :[
+	// 			{name: 'MaMD Analytical', extensions: ['mamd']}
+	// 		]
+	// 	};
+	// 	window.current_file = dialog.showSaveDialog(null, options);
+	// }
 
-	window.is_dirty = false;
-	disable_button("save-button");
+	// fs.writeFile(window.current_file, output, function(err) {
+	// 	if (err) {
+	// 		trackException(err, false);
+	// 		console.error(err);
+	// 	}
+	// 	console.log("File saved");
+	// });
+
+	// window.is_dirty = false;
+	// disable_button("save-button");
 }
 
 function search_for_rscript(path) {
@@ -532,7 +538,7 @@ function show_traits() {
 				.attr("data-trait", traits[i].abbreviation)
 				.attr("data-value", traits[i].images[j].value);
 			itemplate.find(".trait-image")
-				.attr("src", "/assets/img/" + traits[i].images[j].filename)
+				.attr("src", "./assets/img/" + traits[i].images[j].filename)
 				.attr("alt", traits[i].images[j].text + " " + j);
 
 			var col = ttemplate.find(".trait-col" + (j+1).toString());
@@ -685,17 +691,8 @@ function run_analysis() {
 
 		//querystring = `group_list=${groups}${querystring}`;
 		querystring = `group_list=American,African,Asian${querystring}`;
-		console.log(querystring);
-
 		if (querystring.length > 0) {
-			fetch_api_results(querystring).then((data) => {
-				trackEvent("Analysis", "Complete");
-				show_results(null, data);
-			}).catch((err) => {
-				trackEvent("Analysis", "Validation", "Input File");
-				$("#analysis-error-message").empty().text(`There was an error running the analysis: ${err}`);
-				$("#analysis-error").show();
-			});
+			fetch_api_results(querystring);
 		}
 		//var timeout = setTimeout(show_results, 5000);
 	} else {
@@ -706,9 +703,25 @@ function run_analysis() {
 }
 
 function fetch_api_results(querystring) {
-	return fetch(`${API_URL}${querystring}`).then((response) => {
-		if (response.ok) return response.json();
-		return Promise.reject(response);
+	// return fetch(`${API_URL}${querystring}`).then((response) => {
+	// 	if (response.ok) return response.json();
+	// 	return Promise.reject(response);
+	// });
+
+	let url = `${API_URL}${querystring}`;
+	console.log(url);
+
+	$.get(url).then((data) => { 
+		trackEvent("Analysis", "Complete");
+		show_results(null, data);
+	}).fail((json) => {
+		let err = JSON.parse(JSON.stringify(json));
+		console.error(err);
+
+		let msg = err.readyState == 4 ? err.responseJSON.error : "Unknown";
+		trackEvent("Analysis", "Validation", "Input File");
+		$("#analysis-error-message").empty().text(msg);
+		$("#analysis-error").show();
 	});
 }
 
@@ -1029,20 +1042,22 @@ function verify_package_install(pkg, template) {
 }
 
 function export_to_pdf() {
-	var today = new Date();
-	var date = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
-	var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-	var dateTime = date + ' ' + time;
+	return;
 
-	$("#results-export-on").html(dateTime);
+	// var today = new Date();
+	// var date = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
+	// var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+	// var dateTime = date + ' ' + time;
 
-	$("#generic-alert").removeClass()
-		.addClass("alert")
-		.addClass("alert-info")
-		.html("Please wait while the PDF file is being exported.")
-		.show();
+	// $("#results-export-on").html(dateTime);
 
-	ipcRenderer.send('pdf-export');
+	// $("#generic-alert").removeClass()
+	// 	.addClass("alert")
+	// 	.addClass("alert-info")
+	// 	.html("Please wait while the PDF file is being exported.")
+	// 	.show();
+
+	// ipcRenderer.send('pdf-export');
 }
 
 function get_group_name(key) {

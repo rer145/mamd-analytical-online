@@ -4,6 +4,8 @@ X- Setup git repo for website
 - copy process from cookie web for cloudfront, etc.
 - change open/save functions to do file upload/downloads?
 - check with Joe about ancestry groups with new data file
+- first load of db issue (wrap in a promise)
+- prepopulate all params with NA to force send all to api
 
 Docker/API
 - add gha to push docker files to aws repos

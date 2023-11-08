@@ -47,16 +47,16 @@ The parameters accepted to the ```/mamd``` endpoint are as follows:
 |Name|Type|Description|Example|
 |-|-|-|-|
 |group_list|```string```|A comma separated list of groups to include in the analysis|American,African,Asian|
-|ANS|```int```||1|
-|INA|```int```||1|
-|IOB|```int```||1|
-|MT|```int```||1|
-|NAW|```int```||1|
-|NBC|```int```||1|
-|NO|```int```||1|
-|PBD|```int```||1|
-|PZT|```int```||1|
-|ZS|```int```||1|
+|ANS|```int```|Anterior Nasal Spine|1|
+|INA|```int```|Inferior Nasal Aperture|1|
+|IOB|```int```|Interorbital Breadth|1|
+|MT|```int```|Nalar Tubercle|1|
+|NAW|```int```|Nasal Aperture Width|1|
+|NBC|```int```|Nasal Bone Contour|1|
+|NO|```int```|Nasal Overgrowth|1|
+|PBD|```int```|Postbregmatic Depression|1|
+|PZT|```int```|Posterior Zygomatic Tubercle|1|
+|ZS|```int```|Zygomaticomaxillary Suture|1|
 
 
 The response from the API provides a JSON object with the following values:
