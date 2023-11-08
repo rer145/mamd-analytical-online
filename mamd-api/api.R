@@ -1,13 +1,6 @@
-#* Simple echo
-#* @param msg The message to echo
-#* @get /echo
-function (msg = "") {
-    list(msg = paste0("The message is: '", msg, "'"))
-}
-
 #* @filter cors
 cors <- function(req, res) {
-    res$setHeader("Access-Control-Allow-Origin", "*")
+    #res$setHeader("Access-Control-Allow-Origin", "*")
 
     if (req$REQUEST_METHOD == "OPTIONS") {
         res$setHeader("Access-Control-Allow-Methods","*")
@@ -19,6 +12,13 @@ cors <- function(req, res) {
     }
 }
 
+
+#* Simple echo
+#* @param msg The message to echo
+#* @get /echo
+function (msg = "") {
+    list(msg = paste0("The message is: '", msg, "'"))
+}
 
 
 
@@ -42,7 +42,12 @@ cors <- function(req, res) {
 #* @param PZT PZT
 #* @param ZS ZS
 #* @get /mamd
-function (group_list = "Unknown", ANS = NA, INA = NA, IOB = NA, MT = NA, NAW = NA, NBC = NA, NO = NA, PBD = NA, PZT = NA, ZS = NA) {
+function (res, group_list = "Unknown", ANS = NA, INA = NA, IOB = NA, MT = NA, NAW = NA, NBC = NA, NO = NA, PBD = NA, PZT = NA, ZS = NA) {
+
+    # unique_analysis_id <- system("uuid", intern=T)
+    # res$setCookie("unique_analysis_id", unique_analysis_id)
+
+    res$setHeader("Access-Control-Allow-Origin", "*")
 
     suppressPackageStartupMessages(library("nnet"))
     suppressPackageStartupMessages(library("dplyr"))
