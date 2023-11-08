@@ -3,7 +3,7 @@ on: workflow_dispatch
 
 env:
   AWS_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-  ECR_REPOSITORY: ${{ secrets.API_BASE_ECR_REPO }}
+  ECR_REPOSITORY: mamd-api-base
   CONTAINER_NAME: mamd-api-base
 
 jobs:
