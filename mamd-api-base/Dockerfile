@@ -7,7 +7,6 @@ RUN R -e "install.packages('dplyr')"
 RUN R -e "install.packages('caret')"
 RUN R -e "install.packages('e1071')"
 RUN R -e "install.packages('MLmetrics')"
-RUN R -e "install.packages('textutils')"
 
 
 # what about versioning the packages?

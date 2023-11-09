@@ -2,13 +2,12 @@
 const MIN_SELECTIONS = 3;
 const MIN_GROUPS = 3;	// nnet requires 2, but with 2 additional coding for ctab$byClass is required in R.
 
-const API_URL = 'https://mamd-api.ikp55qn3sn7ek.us-east-2.cs.amazonlightsail.com/mamd?';
-//const API_URL = 'http://localhost:8000/mamd?';
+//const API_URL = 'https://mamd-api.ikp55qn3sn7ek.us-east-2.cs.amazonlightsail.com/mamd?';
+const API_URL = 'http://localhost:8000/mamd?';
 
 var probs_chart = null;
 
 function show_app() {
-	$("#section-setup").hide();
 	$("#section-main").show();
 	trackScreenView("analysis");
 }
@@ -28,17 +27,17 @@ function wire_events() {
 		new_case();
 	});
 
-	$("#open-button").on('click', function(e) {
-		e.preventDefault();
-		trackEvent("Application", "Open File");
-		open_case();
-	});
+	// $("#open-button").on('click', function(e) {
+	// 	e.preventDefault();
+	// 	trackEvent("Application", "Open File");
+	// 	open_case();
+	// });
 
-	$("#save-button").on('click', function(e) {
-		e.preventDefault();
-		trackEvent("Application", "Save File");
-		save_case();
-	});
+	// $("#save-button").on('click', function(e) {
+	// 	e.preventDefault();
+	// 	trackEvent("Application", "Save File");
+	// 	save_case();
+	// });
 
 	$("#analysis-button").on('click', function(e) {
 		e.preventDefault();
@@ -54,35 +53,6 @@ function wire_events() {
 		export_to_pdf();
 	});
 
-	$("#settings-rscript-button").on('change', function(e) {
-		//console.log(document.getElementById("settings-rscript-button").files[0].path);
-		localStorage.setItem("app.rscript_path", document.getElementById("settings-rscript-button").files[0].path);
-		$("#rscript-current-path").text(localStorage.getItem("app.rscript_path"));
-		check_settings();
-	});
-
-	// $('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
-	// 	// console.log(e.target.id);
-	// 	// console.log(e.relatedTarget.id);
-
-	// });
-
-	$("#settings-modal").on('show.bs.modal', function(e) {
-		$("#rscript-current-path").text(localStorage.getItem("app.rscript_path"));
-
-		if (store.has("settings.auto_check_for_updates")) {
-			$("#settings-auto-update-check").prop("checked", Boolean(localStorage.getItem("settings.auto_check_for_updates")));
-		} else {
-			$("#settings-auto-update-check").prop("checked", true);
-			localStorage.setItem("settings.auto_check_for_updates", true);
-		}
-		check_packages();
-	});
-
-	$(document).on('click', "#settings-auto-update-check", function(e) {
-		localStorage.setItem("settings.auto_check_for_updates", $(this).is(':checked'));
-	});
-
 	$(document).on('click', "input.group-checkbox", function(e) {
 		var group = $(this).val();
 		toggleGroupSelection(group, $(this).is(':checked'));
@@ -96,58 +66,9 @@ function wire_events() {
 		toggleTraitUISelection($(this), code, value);
 	});
 
-	$(document).on('click', ".r-package-install-button", function(e) {
-		e.preventDefault();
-
-		var parent = $(this).parent();
-		var pkg = $(this).attr("data-package");
-		var badge = parent.find(".badge");
-
-		var success = install_package(pkg, parent);
-
-		if (success) {
-			//verify_package_install(package);
-			badge.removeClass("badge-danger")
-				.addClass("badge-success")
-				.html("Installed");
-
-		} else {
-			badge.removeClass("badge-success")
-				.addClass("badge-danger")
-				.html("Not Installed");
-			// TODO: notify user of failed install
-			//   message box?
-		}
-	});
-
-	$(document).on('click', '#install-update-button', function(e) {
-		e.preventDefault();
-		//updater.performUpdate();
-		trackEvent("Application", "Install Update");
-		ipcRenderer.send('update-start');
-	});
-
-	$(document).on('click', '#dismiss-update-button', function(e) {
-		e.preventDefault();
-		trackEvent("Application", "Dismiss Update");
-		$("#update-alert").hide();
-	});
-
-	$(document).on('click', '#view-pdf-button', function(e) {
-		e.preventDefault();
-		trackEvent("Application", "View PDF");
-		shell.openExternal('file://' + $(this).attr("data-path"));
-		$("#generic-alert").hide();
-	});
-
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
 		trackScreenView($(e.target).attr("id").replace("-tab", ""));
 	});
-
-	// ipcRenderer.on('userdata-path', (event, message) => {
-	// 	//console.log('UserData Path: ' + message);
-	// 	settings.set('config.userdata_path', message);
-	// });
 }
 
 function app_preload() {
@@ -203,9 +124,6 @@ function app_init() {
 	show_traits();
 	//check_offline_status();
 
-	disable_button("export-results-pdf");
-	disable_button("save-button");
-	disable_button("open-button");
 	enable_button("new-button");
 
 	probs_chart = new Chart(document.getElementById("results-probabilities"), {
@@ -354,28 +272,6 @@ function save_case() {
 	// disable_button("save-button");
 }
 
-function search_for_rscript(path) {
-	var span = $("#settings-found-rscript");
-    find.file(/Rscript.exe/, path, function(files) {
-		if (files.length > 0) {
-			for (var i = 0; i < files.length; i++) {
-				span.append(
-					$("<a></a>")
-						.attr("href", "#")
-						.addClass("rscript-settings-link")
-						.text(files[i])
-						.on("click", function(e) {
-							e.preventDefault();
-							localStorage.setItem("app.rscript_path", $(this).text());
-							check_settings();
-						})
-				).append($("<br></br>"));
-			}
-		}
-	})
-    .error(function(err) { console.error(err); });
-}
-
 function init_results() {
 	$("#analysis-pending").show();
 	$("#analysis-loading").hide();
@@ -397,90 +293,6 @@ function check_offline_status() {
 		$("#offline-alert").show();
 	else
 		$("#offline-alert").hide();
-}
-
-
-
-function check_for_updates() {
-	let checkForUpdates = true;
-	if (store.has("settings.auto_check_for_updates")) {
-		checkForUpdates = Boolean(localStorage.getItem("settings.auto_check_for_updates"));
-	}
-
-	if (checkForUpdates) {
-		setTimeout(function() {
-			ipcRenderer.send('update-check');
-		}, 3000);
-	}
-}
-
-function check_settings() {
-	// TODO: if no rscript selected,
-	//   go to settings tab
-	//   disable run analysis button
-	console.log("RPath", localStorage.getItem("app.rscript_path"));
-	console.log("RPackageSource", localStorage.getItem("app.r_package_source_path"));
-	if (localStorage.getItem("app.rscript_path") === undefined) {
-		$("#settings-alert").show();
-		disable_button("analysis-button");
-		$('#tabs a[href="#settings"]').tab('show');
-	} else {
-		$("#settings-alert").hide();
-		$('#tabs a[href="#analysis"]').tab('show');
-		enable_button("analysis-button");
-	}
-}
-
-function check_packages() {
-	var div = $("#settings-r-packages");
-	div.empty();
-
-	$.each(requiredPackages, function(i, v) {
-		//verify_package_install(v);
-		var template = $("#r-package-template").clone();
-		template.removeClass("template");
-		template.removeAttr("id");
-
-		template.find(".r-package-name").html(v);
-		verify_package_install(v, template);
-		div.append(template);
-	});
-}
-
-function toggle_package_status(pkg, template, installed) {
-	var badge = template.find(".badge");
-	var button = template.find(".r-package-install-button");
-	button.attr("data-package", pkg);
-
-	if (installed) {
-		badge.removeClass("badge-danger").addClass("badge-success").html("Installed");
-		button.hide();
-	} else {
-		badge.removeClass("badge-success").addClass("badge-danger").html("Not Installed");
-		button.show();
-	}
-
-	return template;
-}
-
-function show_suggested_rscript_paths() {
-	var span = $("#settings-found-rscript");
-	span.empty().html('<p class="loading">Loading suggested paths...</p>');
-
-	//if (process.platform === "win32" || process.platform === "win64") {
-	if (is.windows) {
-		search_for_rscript('C:\\Program Files\\R');
-		search_for_rscript('C:\\Program Files\\Microsoft\\R Open');
-	}
-
-	//if (process.platform === "darwin") {
-	if (is.macos) {
-        search_for_rscript('/Library/Frameworks/R.framework/Resources/bin');
-		search_for_rscript('/usr/bin/Rscript');
-        search_for_rscript("/Library/Frameworks/R.framework/Versions/3.5.1-MRO/Resources/bin/");
-	}
-
-	span.find("p.loading").remove();
 }
 
 function show_groups() {
@@ -540,6 +352,8 @@ function show_traits() {
 			itemplate.find(".trait-image")
 				.attr("src", "./assets/img/" + traits[i].images[j].filename)
 				.attr("alt", traits[i].images[j].text + " " + j);
+			itemplate.find(".trait-image-score")
+				.html(`Value: ${traits[i].images[j].value}`);
 
 			var col = ttemplate.find(".trait-col" + (j+1).toString());
 			col.append(itemplate);
@@ -593,54 +407,15 @@ function toggleTraitSelection(code, value, isExplicit) {
 
 	//console.log(window.selections);
 }
-
-// function toggleIsDirty() {
-// 	if (window.is_dirty) {
-// 		window.is_dirty = false;
-// 		disable_button("save-button");
-// 	} else {
-// 		window.is_dirty = true;
-// 		enable_button("save-button");
-// 	}
-// }
-
 function generate_inputfile() {
-	console.log("Generating input file...");
-	console.log(window.selections);
-
-	// var keys = ['Group'];
-	// var values = ['Unknown'];
-	// for (var key in window.selections) {
-	// 	keys.push(key);
-	// 	values.push(window.selections[key]);
-	// }
-
-	let qs = '';
+	var groups = window.groups.join();
+	let qs = `group_list=${groups}`;
+	
 	for (var key in window.selections) {
 		qs += `&${key}=${window.selections[key]}`;
 	}
 
 	return qs;
-
-	// var header = keys.join(",");
-	// var inputs = values.join(",");
-
-	// try {
-	// 	var filepath = path.join(localStorage.getItem("user.analysis_path"), new Date().valueOf().toString() + "-input.csv");
-	// 	fs.writeFileSync(filepath, header + '\n' + inputs + '\n');
-	// 	return filepath;
-	// } catch(err) {
-	// 	trackException(err, true);
-	// 	console.log(err);
-	// 	return "";
-	// }
-}
-
-function generate_outputfile(input_file) {
-	// var ts = input_file.replace("-input.csv", "").replace(localStorage.getItem("user.analysis_path"), "");
-	// var filepath = path.join(localStorage.getItem("user.analysis_path"), ts + "-output.txt");
-	// return filepath;
-	return "";
 }
 
 function validate_selections() {
@@ -683,14 +458,8 @@ function run_analysis() {
 
 	if (valid_selections() >= MIN_SELECTIONS) {
 		var querystring = generate_inputfile();
-		//var output_file = generate_outputfile(input_file);
-		var groups = window.groups.join();
-
 		// console.log(querystring);
-		// console.log(groups);
-
-		//querystring = `group_list=${groups}${querystring}`;
-		querystring = `group_list=American,African,Asian${querystring}`;
+		
 		if (querystring.length > 0) {
 			fetch_api_results(querystring);
 		}
@@ -703,13 +472,8 @@ function run_analysis() {
 }
 
 function fetch_api_results(querystring) {
-	// return fetch(`${API_URL}${querystring}`).then((response) => {
-	// 	if (response.ok) return response.json();
-	// 	return Promise.reject(response);
-	// });
-
 	let url = `${API_URL}${querystring}`;
-	console.log(url);
+	// console.log(url);
 
 	$.get(url).then((data) => { 
 		trackEvent("Analysis", "Complete");
@@ -725,6 +489,17 @@ function fetch_api_results(querystring) {
 	});
 }
 
+function sort_probabilities(probs) {
+	let sortable = [];
+	for (var key in probs) {
+		sortable.push([key, probs[key]]);
+	}
+	sortable.sort(function(a, b) {
+		return parseFloat(b[1]) - parseFloat(a[1]);
+	});
+	return sortable;
+}
+
 function show_results(fullJson, data) {
 	var json = data;
 	try {
@@ -734,31 +509,23 @@ function show_results(fullJson, data) {
 
 	console.log(json);
 
-	var pred = json['prediction'][0];
-	var sens = json['sensitivity'][0];
-	var spec = json['specificity'][0];
-	var probs = json['probabilities'];
+	var pred = json['prediction'];
+	var sens = json['sensitivity'];
+	var spec = json['specificity'];
+	var probs = json['probabilities'][0];
 	var prob = 0;
-	var stats = json['statistics'][0];
+	var accuracy = json['accuracy'];
+	var accuracyLower = json['accuracyLower'];
+	var accuracyUpper = json['accuracyUpper'];
 	var matrix = json['matrix'];
-	var groups = window.groups; //window.appdb["groups"];
-	//var traits = window.appdb["traits"];
-
+	var matrixPercentages = json['matrixPercentages'];
+	var groups = window.groups;
+	
 	var db = JSON.parse(localStorage.getItem("db"));
-	//var groups = db.groups;
 	var traits = db.traits;
 
-	// console.log(groups);
-	// console.log(traits);
-	// console.log(pred);
-	// console.log(sens);
-	// console.log(spec);
-	// console.log(probs);
-	// console.log(stats);
-	// console.log(matrix);
-
-	var acc = (parseFloat(stats['accuracy']) * 100).toFixed(2) + "%";
-	var ci = "(" + parseFloat(stats['accuracyLower']).toFixed(4) + ", " + parseFloat(stats['accuracyUpper']).toFixed(4) + ")";
+	var acc = (parseFloat(accuracy) * 100).toFixed(2) + "%";
+	var ci = "(" + parseFloat(accuracyLower).toFixed(4) + ", " + parseFloat(accuracyUpper).toFixed(4) + ")";
 	var sensitivity = parseFloat(sens).toFixed(4);
 	var specificity = parseFloat(spec).toFixed(4);
 
@@ -768,18 +535,22 @@ function show_results(fullJson, data) {
 	$("#results-sensitivity").text(sensitivity);
 	$("#results-specificity").text(specificity);
 
-	probs.sort(function(a, b) {
-		return parseFloat(b.probability) - parseFloat(a.probability);
-	});
+	// probs.sort(function(a, b) {
+	// 	return parseFloat(b.probability) - parseFloat(a.probability);
+	// });
+
+	let sorted_probs = sort_probabilities(probs);
+	console.log(probs);
+	console.log(sorted_probs);
 	
 	var probs_labels = [];
 	var probs_data = [];
-	for (var i = 0; i < probs.length; i++) {
-		probs_labels.push(probs[i]["group"]);
-		probs_data.push(Number(probs[i]["probability"]));
 
-		if (Number(probs[i]["probability"]) > prob) {
-			prob = Number(probs[i]["probability"]);
+	for (var i = 0; i < sorted_probs.length; i++) {
+		probs_labels.push(sorted_probs[i][0]);
+		probs_data.push(Number(sorted_probs[i][1]));
+		if (Number(sorted_probs[i][1]) > prob) {
+			prob = Number(sorted_probs[i][1]);
 		}
 	}
 
@@ -798,6 +569,8 @@ function show_results(fullJson, data) {
 	for (var i = 0; i < traits.length; i++) {
 		var trait = get_trait_name(traits[i].abbreviation);
 		var score = window.selections[traits[i].abbreviation];
+		if (score === -1)
+			score = "NA";
 		var row = $("<tr></tr>");
 		var col1 = $("<td></td>");
 		var col2 = $("<td></td>");
@@ -812,7 +585,8 @@ function show_results(fullJson, data) {
 	var matrix_body = $("#results-matrix").find("tbody");
 
 	var matrix_head_row = $("<tr></tr>");
-	matrix_head_row.append($("<th></th>"));
+	matrix_head_row.append($("<th></th>"));	// reference group
+	matrix_head_row.append($("<th>Groups</th>"));	// group count
 
 	for (var i = 0; i < groups.length; i++) {
 		//let grp = window.appdb['groups'].find(x => { return x.code == groups[i]; });
@@ -823,28 +597,32 @@ function show_results(fullJson, data) {
 
 	matrix_body.empty();
 	for (var i = 0; i < groups.length; i++) {
-		//let grp = window.appdb['groups'].find(x => { return x.code == groups[i]; });
 		let grp = db.groups.find(x => { return x.code == groups[i]; });
+		let grp_ref = matrix.filter(x => x.Reference === grp.code);
+		let grp_prob = probs[grp.code];
+		// let grp_ref_perc = matrixPercentages.filter(x => x.Reference === grp.code);
 
+		let grp_count = 0;
+		if (grp_ref.length > 0) {
+			grp_count = grp_ref.reduce( function(a, b){
+				return a + b.Freq;
+			  }, 0);
+		}
+		
 		var row = $("<tr></tr>");
-		row.append($("<td></td>").text(grp.display));
+		row.append($("<td></td>").html(`${grp.display} (<em>prob: ${grp_prob}</em>)`));
+		row.append($("<td></td>").addClass("text-center").text(grp_count));
 
-		var group_key_i = " " + grp.code + " ";
 		for (var j = 0; j < groups.length; j++) {
-			//let grp2 = window.appdb['groups'].find(x => { return x.code == groups[j]; });
 			let grp2 = db.groups.find(x => { return x.code == groups[j]; });
-			var group_key_j = " " + grp2.code + " ";
-			var temp = "0";
-
-			if (matrix[group_key_i]) {
-				for (var k = 0; k < matrix[group_key_i].length; k++) {
-					if (matrix[group_key_i][k].group === group_key_j) {
-						temp = matrix[group_key_i][k].score;
-					}
-				}
+			let grp_pred = matrix.find(x => x.Reference == grp.code && x.Prediction === grp2.code);
+			let grp_pred_perc = matrixPercentages.find(x => x.Reference == grp.code && x.Prediction === grp2.code);
+	
+			if (grp_pred && grp_pred_perc) {
+				row.append($("<td></td>")
+					.addClass("text-center")
+					.text(`${grp_pred.Freq} (${grp_pred_perc.Freq}%)`));
 			}
-
-			row.append($("<td></td>").addClass("text-center").text(temp));
 		}
 
 		matrix_body.append(row);
@@ -884,180 +662,16 @@ function disable_button(id) {
 	$("#" + id).attr("disabled", "disabled").addClass("disabled");
 }
 
-function install_package(pkg, template) {
-	console.log('installing : ' + pkg);
-	var analysis_path = localStorage.getItem("app.r_analysis_path");
-	var r_script = path.join(analysis_path, "install_package.R");
-	var parameters = [
-		r_script,
-		pkg
-	];
-
-	var options = {
-		name: 'MaMD Analysis Subprocess'
-	};
-	var cmd = '"' + localStorage.getItem("app.rscript_path") + '"';
-	$.each(parameters, function(i,v) {
-		cmd = cmd + ' "' + v + '"';
-	});
-
-	exec.execFile(localStorage.getItem("app.rscript_path"), parameters,
-		function(error, stdout, stderr) {
-			console.error(error);
-			console.log(stderr);
-			toggle_package_status(pkg, template, false);
-			return false;
-		},
-		function(stdout, stderr) {
-			console.log('stdout:', JSON.stringify(stdout));
-			console.log('stderr:', JSON.stringify(stderr));
-			toggle_package_status(pkg, template, true);
-			return true;
-		});
-
-	// exec.sudo(
-	// 	cmd,
-	// 	options,
-	// 	function(error, stdout, stderr) {
-	// 		console.error(error);
-	// 		console.log(stderr);
-	// 		toggle_package_status(pkg, template, false);
-	// 		return false;
-	// 	},
-	// 	function(stdout, stderr) {
-	// 		console.log('stdout:', JSON.stringify(stdout));
-	// 		console.log('stderr:', JSON.stringify(stderr));
-	// 		toggle_package_status(pkg, template, true);
-	// 		return true;
-	// 	});
-
-	// sudo.exec(cmd, options,
-	// 	function(error, stdout, stderr) {
-	// 		if (error) {
-	// 			console.error(error);
-	// 			console.log(stderr);
-	// 			toggle_package_status(pkg, template, false);
-	// 			return false;
-	// 		}
-	// 		console.log('stdout: ' + JSON.stringify(stdout));
-	// 		console.log('stderr: ' + JSON.stringify(stderr));
-	// 		toggle_package_status(pkg, template, true);
-	// 		return true;
-	// 	}
-	// );
-
-	// proc.execFile(localStorage.getItem("app.rscript_path"), parameters, function(err, data) {
-	// 	if(err){
-	// 		console.error(err);
-	// 		return false;
-	// 	}
-	// 	console.log("exec done");
-	// 	return true;
-	// });
-}
-
-function verify_package_install(pkg, template) {
-	//console.log("Verifying package install: " + pkg);
-
-	var proc = require('child_process');
-
-	var analysis_path = localStorage.getItem("app.r_analysis_path");
-	var r_script = path.join(analysis_path, "verify_package.R");
-	var parameters = [
-		r_script,
-		pkg
-	];
-
-	var options = {
-		name: 'MaMD Analysis Subprocess'
-	};
-	var cmd = '"' + localStorage.getItem("app.rscript_path") + '"';
-	$.each(parameters, function(i,v) {
-		cmd = cmd + ' "' + v + '"';
-	});
-
-
-
-	// exec.sudo(cmd, options,
-	// 	function(error, stdout, stderr) {
-	// 		console.error(error);
-	// 		console.error(stdout);
-	// 		console.error(stderr);
-	// 		return false;
-	// 	},
-	// 	function(stdout, stderr) {
-	// 		var output = JSON.stringify(stdout);
-	// 		console.log("verify stdout:", output);
-	// 		toggle_package_status(pkg, template, output.includes("TRUE"));
-	// 	});
-
-	// sudo.exec(cmd, options,
-	// 	function(error, stdout, stderr) {
-	// 		if (error) {
-	// 			console.error(error);
-	// 			console.error(stderr);
-	// 			return false;
-	// 		}
-	// 		var output = JSON.stringify(stdout);
-	// 		console.log("verify stdout: " + output);
-	// 		toggle_package_status(pkg, template, output.includes("TRUE"));
-	// 		// if (output.includes("TRUE"))
-	// 		// 	return true;
-	// 		// else
-	// 		// 	return false;
-	// 	}
-	// );
-
-	exec.execFile(localStorage.getItem("app.rscript_path"), parameters,
-		function(error, stdout, stderr) {
-			console.error(error);
-			console.error(stdout);
-			console.error(stderr);
-			return false;
-		},
-		function(stdout, stderr) {
-			var output = JSON.stringify(stdout);
-			console.log("verify stdout:", output);
-			toggle_package_status(pkg, template, output.includes("TRUE"));
-		});
-
-	// proc.execFile(localStorage.getItem("app.rscript_path"), parameters, function(err, data) {
-	// 	if(err){
-	// 		console.error(err);
-	// 		return false;
-	// 	} else {
-	// 		//console.log(pkg + " INCLUDES FALSE: " + data.includes("FALSE"));
-	// 		//console.log(pkg + " INCLUDES TRUE: " + data.includes("TRUE"));
-	// 		if (data.includes("FALSE"))
-	// 			return false;
-	// 		if (data.includes("TRUE"))
-	// 			return true;
-	// 	}
-
-	// 	// fallthrough
-	// 	return false;
-	// });
-
-	//console.log("Done verifying " + pkg);
-}
-
 function export_to_pdf() {
+	var today = new Date();
+	var date = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
+	var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+	var dateTime = date + ' ' + time;
+
+	$("#results-export-on").html(dateTime);
+	
+	window.print();
 	return;
-
-	// var today = new Date();
-	// var date = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
-	// var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-	// var dateTime = date + ' ' + time;
-
-	// $("#results-export-on").html(dateTime);
-
-	// $("#generic-alert").removeClass()
-	// 	.addClass("alert")
-	// 	.addClass("alert-info")
-	// 	.html("Please wait while the PDF file is being exported.")
-	// 	.show();
-
-	// ipcRenderer.send('pdf-export');
 }
 
 function get_group_name(key) {

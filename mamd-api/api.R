@@ -29,7 +29,7 @@ function (msg = "") {
 
 
 #* MaMD Analytical
-#* @serializer json
+#* @serializer unboxedJSON
 #* @param group_list The list of groups to include
 #* @param ANS ANS
 #* @param INA INA
@@ -56,10 +56,21 @@ function (res, group_list = "Unknown", ANS = NA, INA = NA, IOB = NA, MT = NA, NA
     suppressPackageStartupMessages(library("MLmetrics"))
     suppressPackageStartupMessages(library("textutils"))
 
+    # if (ANS == -1) ANS <- NA
+    # if (INA == -1) INA <- NA
+    # if (IOB == -1) IOB <- NA
+    # if (MT == -1) MT <- NA
+    # if (NAW == -1) NAW <- NA
+    # if (NBC == -1) NBC <- NA
+    # if (NO == -1) NO <- NA
+    # if (PBD == -1) PBD <- NA
+    # if (PZT == -1) PZT <- NA
+    # if (ZS == -1) ZS <- NA
+
     inputs_header <- c('Group', 'ANS', 'INA', 'IOB', 'MT', 'NAW', 'NBC', 'NO', 'PBD', 'PZT', 'ZS')
     inputs <- data.frame(
         group_list, 
-        as.numeric(ANS), 
+        as.numeric(ANS),
         as.numeric(INA),
         as.numeric(IOB), 
         as.numeric(MT),
@@ -79,7 +90,7 @@ function (res, group_list = "Unknown", ANS = NA, INA = NA, IOB = NA, MT = NA, NA
 
 
     aNN_data <- read.csv("/mamd.csv")
-    GroupCol <- 'Ancestry'
+    GroupCol <- 'Group'
 
     names(aNN_data)[names(aNN_data) == GroupCol] <- 'Group';
 
@@ -143,8 +154,8 @@ function (res, group_list = "Unknown", ANS = NA, INA = NA, IOB = NA, MT = NA, NA
 
 
     fit.NN$bestTune[1,]
-    RefGrpClassTbl <- cbind(aNN_data['MaMDID'],aNN_data['Group'], mod, ppbs);
-    names(RefGrpClassTbl)[names(RefGrpClassTbl) == 'mod'] <- 'Into';
+    #RefGrpClassTbl <- cbind(aNN_data['MaMDID'],aNN_data['Group'], mod, ppbs);
+    #names(RefGrpClassTbl)[names(RefGrpClassTbl) == 'mod'] <- 'Into';
 
 
     ############ Predict current case
@@ -163,73 +174,21 @@ function (res, group_list = "Unknown", ANS = NA, INA = NA, IOB = NA, MT = NA, NA
     aNNpred<-colnames(pred)[apply(pred, 1, which.max)]
     #aNNpred
 
-
-
     list(
-        ctab = HTMLencode(ctab),
+        #ctabByClass = ctab$byClass,
+        #ctabOverall = ctab$overall,
         prediction = aNNpred,
-        sensitivity = 0,
-        specificity = 0,
-        probabilities = c(6,7,8),     # { group, probability }
-        statistics = data.frame(
-            accuracy = 1,
-            accuracyLower = 2,
-            accuracyUpper = 3
-        ),
-        matrix = matrix(c(1,2,3,4,5,6), nrow=2, ncol=3, byrow=TRUE)
+        sensitivity = trimws(gsub(paste("Class: ", trimws(aNNpred), sep=""), "", ctab$byClass[,"Sensitivity"][paste("Class: ", trimws(aNNpred), sep="")])),
+        specificity = trimws(gsub(paste("Class: ", trimws(aNNpred), sep=""), "", ctab$byClass[,"Specificity"][paste("Class: ", trimws(aNNpred), sep="")])),
+        # sensitivity = ctab$byClass["Sensitivity"],
+        # specificity = ctab$byClass["Specificity"],
+        accuracy = ctab$overall["Accuracy"],
+        accuracyLower = ctab$overall["AccuracyLower"],
+        accuracyUpper = ctab$overall["AccuracyUpper"],
+        probabilities = round(pred,3),
+        #matrix = matrix(c(1,2,3,4,5,6), nrow=2, ncol=3, byrow=TRUE),
+        matrix = as.data.frame(ctab$table),
+        matrixPercentages = as.data.frame(round(prop.table(ctab$table, 2),3)*100)
+        #bestModel = fit.NN$bestTune[1,]
     )
-
-
-
-
-
-
-
-
-
-
-    # list(
-    #     ctab,
-    #     pred.post,
-    #     aNNpred
-    # )
-
-    # list(
-    #     prediction = trimws(aNNpred),
-    #     sensitivity = trimws(gsub(paste("Class: ", trimws(aNNpred), sep=""), "", ctab$byClass[,"Sensitivity"][paste("Class: ", trimws(aNNpred), sep="")])),
-    #     specificity = trimws(gsub(paste("Class: ", trimws(aNNpred), sep=""), "", ctab$byClass[,"Specificity"][paste("Class: ", trimws(aNNpred), sep="")])),
-    # )
-
-    # results <- cat(ctab, pred.post, aNNpred, sep="\n")
-    # results
-
-
-    
-    
-    # pred.post
-    # aNNpred
-    
-    # results.prediction1 <- pred.post
-    # results.prediction2 <- aNNpred
-    # results
-
-    # write ctab, pred.post, aNNpred to a file with a cookie timestamp (saved in docker container)
-    # return back cookie and future calls (plots, data, etc.) use the cookie to lookup the data?
-
-
-
-    # list(
-    #     arguments = inputs, 
-    #     groups = groups)
-
-    # results_header <- c('Inputs', 'Groups', 'Value 1', 'Value 2')
-    # results <- data.frame(
-    #     inputs,
-    #     groups,
-    #     123,
-    #     "Hello poop",
-    #     stringsAsFactors = TRUE)
-    # names(results) <- results_header
-
-    # results
 }

@@ -1,11 +1,11 @@
 Web
 X- Setup git repo for website
-- add gha to push to aws s3 and point domain to it
-- copy process from cookie web for cloudfront, etc.
-- change open/save functions to do file upload/downloads?
-- check with Joe about ancestry groups with new data file
-- first load of db issue (wrap in a promise)
-- prepopulate all params with NA to force send all to api
+X- add gha to push to aws s3 and point domain to it
+X- copy process from cookie web for cloudfront, etc.
+X- change open/save functions to do file upload/downloads?
+X- check with Joe about ancestry groups with new data file
+X- first load of db issue (wrap in a promise)
+X- prepopulate all params with NA/-1 to force send all to api
 
 Docker/API
 - add gha to push docker files to aws repos
@@ -18,8 +18,21 @@ Docker/API
 
 
 Cleanup
-- cleanup extra web code for electron/tracking
+X- cleanup extra web code for electron/tracking
 - add google analytics for tracking events/time?
 X- document docker build/tag/push process
 - write documentation on hub.docker.com for containers
+
+
+
+
+X- use old data file for analysis (not 1Jan2022)
+X- ctable - rows are reference, cols are predicted
+X- also show percentages in output of table
+X- show total of groups (sum each row)
+X- remove open/save buttons
+X- change pdf button to print
+X- add trait score value under each picture
+X- add table of probablilitlies under chart  in text
+X- sort chart bars in order
 
