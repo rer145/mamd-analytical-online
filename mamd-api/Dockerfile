@@ -6,4 +6,4 @@ MAINTAINER "Ron Richardson" ron.richardson@gmail.com
 COPY mamd.csv /mamd.csv
 COPY api.R /api.R
 
-CMD ["/app/plumber.R"]
+CMD ["/app/plumber.R", "/api.R"]
