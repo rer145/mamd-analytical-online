@@ -6,6 +6,12 @@ X- change open/save functions to do file upload/downloads?
 X- check with Joe about ancestry groups with new data file
 X- first load of db issue (wrap in a promise)
 X- prepopulate all params with NA/-1 to force send all to api
+- convert to PWA
+    - service worker
+    - add to homescreen
+    - offline mode detection?
+    - file/image caching?
+- add splash screen/modal on first run with checkbox to dismiss (localstorage)
 
 Docker/API
 - add gha to push docker files to aws repos
@@ -22,6 +28,8 @@ X- cleanup extra web code for electron/tracking
 - add google analytics for tracking events/time?
 X- document docker build/tag/push process
 - write documentation on hub.docker.com for containers
+- Make repo public
+- add text from old repo to new in the readme for credits
 
 
 
@@ -36,3 +44,6 @@ X- add trait score value under each picture
 X- add table of probablilitlies under chart  in text
 X- sort chart bars in order
 
+
+- test deploying to Digital Ocean (2gb, 1vcpu) - $12/mo vs $40 on aws
+- test running api as container image on aws lamba (cold starts?)
