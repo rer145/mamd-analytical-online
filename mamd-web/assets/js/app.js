@@ -407,6 +407,7 @@ function toggleTraitSelection(code, value, isExplicit) {
 
 	//console.log(window.selections);
 }
+
 function generate_inputfile() {
 	var groups = window.groups.join();
 	let qs = `group_list=${groups}`;
@@ -547,7 +548,7 @@ function show_results(fullJson, data) {
 	var probs_data = [];
 
 	for (var i = 0; i < sorted_probs.length; i++) {
-		probs_labels.push(sorted_probs[i][0]);
+		probs_labels.push(get_group_name(sorted_probs[i][0]));
 		probs_data.push(Number(sorted_probs[i][1]));
 		if (Number(sorted_probs[i][1]) > prob) {
 			prob = Number(sorted_probs[i][1]);
