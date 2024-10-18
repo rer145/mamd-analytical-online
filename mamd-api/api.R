@@ -122,7 +122,7 @@ function (res, group_list = "Unknown", ANS = NA, INA = NA, IOB = NA, MT = NA, NA
 
 
     fit.NN <- train(
-        Group ~ ANS+ INA+ IOB+ MT+ NAW+ NBC+ NO+ PBD+ PZT+ ZS, 
+        Group ~ ., 
         data = aNN_data, 
         method = "nnet", 
         trace = F,

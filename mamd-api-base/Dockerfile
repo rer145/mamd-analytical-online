@@ -1,6 +1,5 @@
 FROM rstudio/plumber
 LABEL org.opencontainers.image.authors="Ron Richardson <ron.richardson@gmail.com>"
-MAINTAINER "Ron Richardson" ron.richardson@gmail.com
 
 RUN R -e "install.packages('nnet')"
 RUN R -e "install.packages('dplyr')"
