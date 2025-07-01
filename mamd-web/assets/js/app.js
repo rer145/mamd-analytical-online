@@ -79,7 +79,7 @@ function app_preload() {
 		window.current_file = "";
 		window.current_results = "";
 
-		localStorage.setItem("version", "1.0.0");
+		localStorage.setItem("version", "1.1.0");
 		localStorage.setItem("uuid", "");
 		localStorage.setItem("settings.analytics", true);
 		localStorage.setItem("settings.dev_mode", true);

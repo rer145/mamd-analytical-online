@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+	<head profile="http://www.w3.org/2005/10/profile">
+		<meta charset="utf-8">
+		<title>MaMD Analytical - About</title>
+		<link rel="stylesheet" href="assets/css/bootstrap.custom.css">
+		<link rel="stylesheet" href="assets/css/index.css">
+		<link rel="stylesheet" href="assets/css/all.min.css" />
+		<link rel="stylesheet" href="assets/css/jquery.toast.min.css" />
+		<link rel="stylesheet" href="assets/css/Chart.min.css" />
+		<script type="text/javascript" src="assets/js/all.min.js"></script>
+
+		<script type="text/javascript">
+			(function(c,l,a,r,i,t,y){
+				c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+				t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+				y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+			})(window, document, "clarity", "script", "k17seufvn2");
+		</script>
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top d-print-none">
+			<a class="navbar-brand" href="#">MaMD Analytical</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarColor01">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+						<a class="nav-link" href="#"></a>
+					</li>
+				</ul>
+				<form class="my-2 my-lg-0">
+					<a id="new-button" class="btn btn-secondary" href="index.html">Home</a>
+					<a id="about-button" class="btn btn-secondary" href="about.html">About MaMD</a>
+				</form>
+			</div>
+		</nav>
+
+		<div class="container mt-5">
+			<div class="row">
+				<div class="col-12 text-center">
+					<img src="assets/img/mamd_logo.png" alt="MaMD Analytical Logo" class="img-fluid mt-5 mb-3" />
+				</div>
+			</div>
+			<div class="row mt-5">
+				<div class="col-12 text-left">
+					<h1>About MaMD Analytical</h1>
+
+					<h3>What is MaMD Analytical?</h3>
+					<p>MaMD Analytical is a freely available software designed to estimate population affinity using
+					human cranial macromorphoscopic (MMS) traits. Built upon procedures outlined by Hefner and
+					Ousley (2014), the software allows users to input MMS scores based on standardized line
+					drawings, ensuring consistency and accuracy in data collection.</p>
+					<p>By leveraging an artificial neural network (aNN), MaMD Analytical generates classifications
+					with estimated likelihoods, assigning unknown individuals to forensically relevant population
+					groups. Reference samples for these classifications are drawn from the <strong>Macromorphoscopic
+					Databank (MaMD)</strong>, one of the most comprehensive datasets of its kind. Each classification is
+					accompanied by key performance metrics, including <strong>sensitivity, specificity, and cross-validated
+					classification accuracies</strong>, providing users with critical insights into the reliability of their results.</p>
+
+					<h3>Data Validation and Contextualization</h3>
+					<p>The MaMD dataset serves as an <strong>internal validation set</strong>, mitigating concerns about potential
+					biases in data collection introduced by the primary author (JTH). This approach ensures the
+					integrity of the classification process while maintaining transparency in the program's
+					methodology.</p>
+					<p>Population affinity estimation is inherently complex, requiring <strong>flexibility in interpretation</strong> and
+					an understanding of the underlying data. The terminology and classification framework used in
+					MaMD Analytical reflect a <strong>nuanced approach</strong>, aligning with recent discussions on the
+					contextualization of ancestry estimation (Pilloud et al. 2021).</p>
+
+					<h3>Reference Populations</h3>
+					<p>MaMD Analytical incorporates reference samples from a diverse set of global populations,
+					ensuring a broad and representative dataset for classification. These samples include individuals
+					from <strong>African American, American Indian, American Asian, European American, and
+					Southwest Hispanic</strong> populations.</p>
+
+					<h2>Update: MaMD Analytical 1.1.0</h2>
+					<p><strong>MaMD Analytical 1.1.0</strong> introduces a significant enhancement: <strong>downsampling to balance
+					reference populations</strong>. One of the challenges in population affinity estimation is the unequal
+					representation of groups in reference datasets. Some populations are overrepresented, which can
+					<strong>bias classification results and inflate posterior probabilities</strong>.</p>
+
+					<p>To address this, <strong>version 1.1.0 implements a downsampling technique</strong> that reduces the
+					influence of overrepresented groups, ensuring a <strong>more even distribution</strong> across reference
+					populations. This adjustment enhances the fairness and accuracy of classifications, making
+					MaMD Analytical a <strong>more robust and reliable tool</strong> for forensic anthropologists.</p>
+				</div>
+			</div>
+		</div>
+
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/popper.min.js"></script>
+		<script src="assets/js/bootstrap.min.js"></script>
+		<script src="assets/js/jquery.toast.min.js"></script>
+		<script src="assets/js/Chart.bundle.min.js"></script>
+	</body>
+</html>
