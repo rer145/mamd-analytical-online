@@ -27,9 +27,14 @@ This container is currently running on an AWS Lightsail instance (Micro x1 - 1gb
 ```
 docker build -t mamd-api .
 docker tag mamd-api mamd-api:X.Y.Z
-docker tag mamd-api:X.Y.Z rer145/mamd-api:X.Y.Z
+docker tag mamd-api mamd-api:latest
+docker tag mamd-api rer145/mamd-api:X.Y.Z
+docker tag mamd-api rer145/mamd-api:latest
 docker push rer145/mamd-api:X.Y.Z
+docker push rer145/mamd-api:latest
 ```
+
+Images MUST be built on a Windows machine or non-silicon Mac (cannot be an ARM processor).
 
 **Running**
 ```
