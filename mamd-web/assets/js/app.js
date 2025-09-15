@@ -2,8 +2,8 @@
 const MIN_SELECTIONS = 3;
 const MIN_GROUPS = 2;	// nnet requires 2, but with 2 additional coding for ctab$byClass is required in R.
 
-//const API_URL = 'https://mamd-api.ikp55qn3sn7ek.us-east-2.cs.amazonlightsail.com/mamd?';
-const API_URL = 'http://localhost:8000/mamd?';
+const API_URL = 'https://mamd-api.ikp55qn3sn7ek.us-east-2.cs.amazonlightsail.com/mamd?';
+// const API_URL = 'http://localhost:8000/mamd?';
 
 var probs_chart = null;
 

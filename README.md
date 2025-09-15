@@ -26,8 +26,9 @@ This container is currently running on an AWS Lightsail instance (Micro x1 - 1gb
 **Building/Deploying**
 ```
 docker build -t mamd-api .
-docker tag mamd-api rer145/mamd-api
-docker push rer145/mamd-api
+docker tag mamd-api mamd-api:X.Y.Z
+docker tag mamd-api:X.Y.Z rer145/mamd-api:X.Y.Z
+docker push rer145/mamd-api:X.Y.Z
 ```
 
 **Running**
