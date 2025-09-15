@@ -1,9 +1,9 @@
 {
     "groups": [
-        {"code": "AmericanBlack", "display": "African American"},
-        {"code": "AmericanWhite", "display": "Euro American"},
+        {"code": "AfrAm", "display": "African American"},
+        {"code": "EurAm", "display": "Euro American"},
         {"code": "Amerindian", "display": "American Indian"},
-        {"code": "Asian", "display": "American Asian"},
+        {"code": "AsAm", "display": "American Asian"},
         {"code": "SWHispanic", "display": "Southwest Hispanic"}
     ],
     "traits": [

@@ -35,6 +35,8 @@ docker push rer145/mamd-api
 docker run -it --rm -p 8000:8000 mamd-api /api.R
 
 http://localhost:8000/mamd?group_list=American,African,Asian&ANS=1&INA=3&IOB=1&MT=1&NAW=1&NBC=1&NO=1&PBD=1&PZT=1&ZS=1
+
+http://localhost:8000/mamd?group_list=AfrAm,EurAm,AsAm,Amerindian,SWHispanic&ANS=1&INA=0&IOB=3&MT=NA&NAW=3&NBC=1&NO=NA&PBD=1&PZT=NA&ZS=NA
 ```
 
 

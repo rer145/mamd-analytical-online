@@ -1,9 +1,9 @@
 'use strict';
 const MIN_SELECTIONS = 3;
-const MIN_GROUPS = 3;	// nnet requires 2, but with 2 additional coding for ctab$byClass is required in R.
+const MIN_GROUPS = 2;	// nnet requires 2, but with 2 additional coding for ctab$byClass is required in R.
 
-const API_URL = 'https://mamd-api.ikp55qn3sn7ek.us-east-2.cs.amazonlightsail.com/mamd?';
-//const API_URL = 'http://localhost:8000/mamd?';
+//const API_URL = 'https://mamd-api.ikp55qn3sn7ek.us-east-2.cs.amazonlightsail.com/mamd?';
+const API_URL = 'http://localhost:8000/mamd?';
 
 var probs_chart = null;
 
@@ -79,7 +79,7 @@ function app_preload() {
 		window.current_file = "";
 		window.current_results = "";
 
-		localStorage.setItem("version", "1.0.0");
+		localStorage.setItem("version", "1.1.0");
 		localStorage.setItem("uuid", "");
 		localStorage.setItem("settings.analytics", true);
 		localStorage.setItem("settings.dev_mode", true);
@@ -474,7 +474,7 @@ function run_analysis() {
 
 function fetch_api_results(querystring) {
 	let url = `${API_URL}${querystring}`;
-	// console.log(url);
+	console.log(url);
 
 	$.get(url).then((data) => { 
 		trackEvent("Analysis", "Complete");
