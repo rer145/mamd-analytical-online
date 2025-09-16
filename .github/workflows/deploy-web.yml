@@ -18,7 +18,7 @@ jobs:
           bucket: ${{ secrets.PRODUCTION_S3_BUCKET }}
           bucket-region: ${{ secrets.AWS_DEFAULT_REGION }}
           dist-id: ${{ secrets.PRODUCTION_CLOUDFRONT_DISTRIBUTION_ID }}
-          invalidation: /
+          invalidation: /*
           delete-removed: true
           no-cache: true
           private: true
